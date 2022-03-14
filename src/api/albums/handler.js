@@ -110,7 +110,38 @@ class AlbumsHandler {
     }
   }
 
-  async deleteAlbumByIdHandler(request, h) {}
+  async deleteAlbumByIdHandler(request, h) {
+    try {
+      const { id } = request.params;
+
+      await this._service.deleteAlbumById(id);
+
+      return h
+        .response({
+          status: 'success',
+          message: 'Album deleted',
+        })
+        .code(200);
+    } catch (error) {
+      if (error instanceof ClientError) {
+        return h
+          .response({
+            status: 'fail',
+            message: error.message,
+          })
+          .code(error.statusCode);
+      }
+
+      // Server ERROR
+      console.error(error.stack);
+      return h
+        .response({
+          status: 'error',
+          message: "Sorry, we've encountered an unexpected error. Please try again later.",
+        })
+        .code(500);
+    }
+  }
 }
 
 module.exports = AlbumsHandler;

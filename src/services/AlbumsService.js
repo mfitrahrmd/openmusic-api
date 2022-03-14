@@ -59,6 +59,21 @@ class AlbumsService {
       throw new NotFoundError('Album not found');
     }
   }
+
+  async deleteAlbumById(id) {
+    const query = {
+      text: 'DELETE FROM albums WHERE album_id = $1 RETURNING album_id',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query).catch((error) => {
+      throw error;
+    });
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Album not found');
+    }
+  }
 }
 
 module.exports = AlbumsService;
