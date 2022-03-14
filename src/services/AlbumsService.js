@@ -1,6 +1,7 @@
 const { nanoid } = require('nanoid');
-const { camelCase } = require('lodash');
+const { mapKeys, camelCase } = require('lodash');
 const InvariantError = require('../exceptions/InvariantError');
+const NotFoundError = require('../exceptions/NotFoundError');
 const postgrePool = require('../config/PostgrePool');
 
 class AlbumsService {
@@ -22,7 +23,22 @@ class AlbumsService {
       throw new InvariantError('Album failed to add');
     }
 
-    return camelCase(result.rows[0].album_id);
+    return result.rows.map((row) => mapKeys(row, (value, key) => camelCase(key)))[0];
+  }
+
+  async getAlbumById(id) {
+    const query = {
+      text: 'SELECT * FROM albums WHERE album_id = $1',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Album not found');
+    }
+
+    return result.rows.map((row) => mapKeys(row, (value, key) => camelCase(key)))[0];
   }
 }
 
