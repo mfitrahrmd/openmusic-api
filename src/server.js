@@ -1,4 +1,5 @@
 const Hapi = require('@hapi/hapi');
+const albumsPlugin = require('./api/albums');
 require('dotenv').config();
 
 const HOST = process.env.HOST || 'localhost';
@@ -14,6 +15,8 @@ const init = async () => {
       },
     },
   });
+
+  await server.register(albumsPlugin);
 
   try {
     await server.start();
