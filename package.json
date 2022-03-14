@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon ./src/server.js",
     "start": "node ./src/server.js",
+    "migrate": "node-pg-migrate",
     "test": "eslint . --ext .js"
   },
   "repository": {
@@ -34,7 +35,12 @@
     "eslint-plugin-prettier": "^4.0.0"
   },
   "dependencies": {
+    "@hapi/hapi": "^20.2.1",
     "dotenv": "^16.0.0",
-    "nodemon": "^2.0.15"
+    "joi": "^17.6.0",
+    "nanoid": "^3.3.1",
+    "node-pg-migrate": "^6.2.1",
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.3"
   }
 }
