@@ -17,7 +17,9 @@ class AlbumsService {
       values: [id, name, year],
     };
 
-    const result = await this._pool.query(query);
+    const result = await this._pool.query(query).catch((error) => {
+      throw error;
+    });
 
     if (!result.rows[0].album_id) {
       throw new InvariantError('Album failed to add');
@@ -32,13 +34,30 @@ class AlbumsService {
       values: [id],
     };
 
-    const result = await this._pool.query(query);
+    const result = await this._pool.query(query).catch((error) => {
+      throw error;
+    });
 
     if (!result.rows.length) {
       throw new NotFoundError('Album not found');
     }
 
     return result.rows.map((row) => mapKeys(row, (value, key) => camelCase(key)))[0];
+  }
+
+  async updateAlbumById(id, { name, year }) {
+    const query = {
+      text: 'UPDATE albums SET name = $1, year = $2 WHERE album_id = $3 RETURNING album_id',
+      values: [name, year, id],
+    };
+
+    const result = await this._pool.query(query).catch((error) => {
+      throw error;
+    });
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Album not found');
+    }
   }
 }
 

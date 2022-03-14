@@ -33,7 +33,7 @@ class AlbumsHandler {
       }
 
       // Server ERROR
-      console.error(error);
+      console.error(error.stack);
       return h
         .response({
           status: 'error',
@@ -66,7 +66,7 @@ class AlbumsHandler {
       }
 
       // Server ERROR
-      console.error(error);
+      console.error(error.stack);
       return h
         .response({
           status: 'error',
@@ -76,7 +76,39 @@ class AlbumsHandler {
     }
   }
 
-  async putAlbumByIdHandler(request, h) {}
+  async putAlbumByIdHandler(request, h) {
+    try {
+      const { id } = request.params;
+      const { name, year } = request.payload;
+
+      await this._service.updateAlbumById(id, { name, year });
+
+      return h
+        .response({
+          status: 'success',
+          message: 'Album updated',
+        })
+        .code(200);
+    } catch (error) {
+      if (error instanceof ClientError) {
+        return h
+          .response({
+            status: 'fail',
+            message: error.message,
+          })
+          .code(error.statusCode);
+      }
+
+      // Server ERROR
+      console.error(error.stack);
+      return h
+        .response({
+          status: 'error',
+          message: "Sorry, we've encountered an unexpected error. Please try again later.",
+        })
+        .code(500);
+    }
+  }
 
   async deleteAlbumByIdHandler(request, h) {}
 }
