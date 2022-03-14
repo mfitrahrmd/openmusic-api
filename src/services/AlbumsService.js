@@ -31,24 +31,23 @@ class AlbumsService {
 
   async getAlbumById(id) {
     const query = {
-      text: 'SELECT * FROM albums WHERE album_id = $1',
+      text: 'SELECT album_id AS id, name, year FROM albums WHERE album_id = $1',
       values: [id],
     };
 
-    const result = await this._pool.query(query).catch((error) => {
-      throw error;
-    });
-
-    if (!result.rows.length) {
-      throw new NotFoundError('Album not found');
-    }
-
-    return {
-      album: result.rows.map(({ album_id, ...rest }) => ({
-        id: album_id,
-        ...rest,
-      }))[0],
+    const query2 = {
+      text: 'SELECT song_id AS id, title, performer FROM songs WHERE album_id = $1',
+      values: [id],
     };
+
+    return Promise.all([this._pool.query(query), this._pool.query(query2)])
+      .then(([q, q2]) => {
+        q.rows[0].songs = q2.rows;
+        return { album: q.rows[0] };
+      })
+      .catch(() => {
+        throw new NotFoundError('Album not found');
+      });
   }
 
   async updateAlbumById(id, { name, year }) {
