@@ -12,7 +12,7 @@ class SongsService {
     const id = nanoid(16);
 
     const query = {
-      text: 'INSERT INTO Songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING song_id',
+      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING song_id AS songId',
       values: [id, title, year, genre, performer, duration, albumId],
     };
 
@@ -20,18 +20,28 @@ class SongsService {
       throw error;
     });
 
-    if (!result.rows[0].song_id) {
+    if (!result.rows[0].songid) {
       throw new InvariantError('Song failed to add');
     }
 
-    return result.rows.map(({ song_id }) => ({
-      id: song_id,
-    }))[0];
+    return result.rows[0];
+  }
+
+  async getSongs() {
+    const query = {
+      text: 'SELECT song_id AS id,title,performer FROM songs',
+    };
+
+    const result = await this._pool.query(query).catch((error) => {
+      throw error;
+    });
+
+    return { songs: result.rows };
   }
 
   async getSongById(id) {
     const query = {
-      text: 'SELECT * FROM Songs WHERE Song_id = $1',
+      text: 'SELECT song_id AS id, title, year, performer, genre, duration, album_id AS albumId FROM songs WHERE song_id = $1',
       values: [id],
     };
 
@@ -43,12 +53,7 @@ class SongsService {
       throw new NotFoundError('Song not found');
     }
 
-    return {
-      Song: result.rows.map(({ Song_id, ...rest }) => ({
-        id: Song_id,
-        ...rest,
-      }))[0],
-    };
+    return { song: result.rows[0] };
   }
 
   async updateSongById(id, { name, year }) {

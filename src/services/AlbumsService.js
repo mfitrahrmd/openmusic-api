@@ -25,7 +25,7 @@ class AlbumsService {
     }
 
     return result.rows.map(({ album_id }) => ({
-      id: album_id,
+      albumId: album_id,
     }))[0];
   }
 
