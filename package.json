@@ -1,0 +1,40 @@
+{
+  "name": "openmusic-api",
+  "version": "1.0.0",
+  "description": "First project of \"Belajar Fundamental Aplikasi Back-End\" provide by DTS FGA & Dicoding Indonesia.",
+  "main": "./src/server.js",
+  "scripts": {
+    "dev": "nodemon ./src/server.js",
+    "start": "node ./src/server.js",
+    "test": "eslint . --ext .js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mfitrahrmd420/openmusic-api.git"
+  },
+  "keywords": [
+    "api",
+    "rest",
+    "rest-api",
+    "postgre",
+    "postgresql",
+    "hapi"
+  ],
+  "author": "M Fitrah Ramadhan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mfitrahrmd420/openmusic-api/issues"
+  },
+  "homepage": "https://github.com/mfitrahrmd420/openmusic-api#readme",
+  "devDependencies": {
+    "eslint": "^8.11.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
