@@ -25,7 +25,9 @@ class AlbumsService {
       throw new InvariantError('Album failed to add');
     }
 
-    return result.rows.map((row) => mapKeys(row, (value, key) => camelCase(key)))[0];
+    return result.rows.map(({ album_id }) => ({
+      id: album_id,
+    }))[0];
   }
 
   async getAlbumById(id) {
@@ -42,7 +44,12 @@ class AlbumsService {
       throw new NotFoundError('Album not found');
     }
 
-    return result.rows.map((row) => mapKeys(row, (value, key) => camelCase(key)))[0];
+    return {
+      album: result.rows.map(({ album_id, ...rest }) => ({
+        id: album_id,
+        ...rest,
+      }))[0],
+    };
   }
 
   async updateAlbumById(id, { name, year }) {
