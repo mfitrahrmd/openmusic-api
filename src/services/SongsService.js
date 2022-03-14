@@ -16,8 +16,8 @@ class SongsService {
       values: [id, title, year, genre, performer, duration, albumId],
     };
 
-    const result = await this._pool.query(query).catch((error) => {
-      throw error;
+    const result = await this._pool.query(query).catch(() => {
+      throw new NotFoundError(`Album with id ${albumId} was not found`);
     });
 
     if (!result.rows[0].songid) {
@@ -56,14 +56,14 @@ class SongsService {
     return { song: result.rows[0] };
   }
 
-  async updateSongById(id, { name, year }) {
+  async updateSongById(id, { title, year, performer, genre, duration, albumId }) {
     const query = {
-      text: 'UPDATE Songs SET name = $1, year = $2 WHERE Song_id = $3 RETURNING Song_id',
-      values: [name, year, id],
+      text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5, album_id = $6 WHERE song_id = $7 RETURNING song_id AS songId',
+      values: [title, year, performer, genre, duration, albumId, id],
     };
 
-    const result = await this._pool.query(query).catch((error) => {
-      throw error;
+    const result = await this._pool.query(query).catch(() => {
+      throw new NotFoundError(`Album with id ${albumId} was not found`);
     });
 
     if (!result.rows.length) {
@@ -73,7 +73,7 @@ class SongsService {
 
   async deleteSongById(id) {
     const query = {
-      text: 'DELETE FROM Songs WHERE Song_id = $1 RETURNING Song_id',
+      text: 'DELETE FROM songs WHERE song_id = $1 RETURNING song_id AS songId',
       values: [id],
     };
 
