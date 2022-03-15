@@ -41,12 +41,26 @@ class SongsService {
 
   /**
    * Get songs data.
+   * @param {object} details - Song details
+   * @param {string} detail.title - Song title to be search
+   * @param {string} detail.performer - Song performer to be search
    * @returns {object} Object of Array contains songs data.
    */
-  async getSongs() {
+  async getSongs({ title, performer }) {
     const query = {
       text: 'SELECT song_id AS id, title, performer FROM songs',
     };
+
+    if (title && !performer) {
+      query.text += ' WHERE title ILIKE $1';
+      query.values = [`%${title}%`];
+    } else if (!title && performer) {
+      query.text += ' WHERE performer ILIKE $1';
+      query.values = [`%${performer}%`];
+    } else if (title && performer) {
+      query.text += ' WHERE title ILIKE $1 AND performer ILIKE $2';
+      query.values = [`%${title}%`, `%${performer}%`];
+    }
 
     const result = await this._pool.query(query).catch((error) => {
       throw error;
