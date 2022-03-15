@@ -1,7 +1,9 @@
+// Third-Party Modules
 const Hapi = require('@hapi/hapi');
+require('dotenv').config();
+// Local Modules
 const albumsPlugin = require('./api/albums');
 const songsPlugin = require('./api/songs');
-require('dotenv').config();
 
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 5000;
