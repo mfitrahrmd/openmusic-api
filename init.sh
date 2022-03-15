@@ -1,16 +1,34 @@
-echo -e "Creating .env file....\nFile created. Fill the required variables in .env file."
+echo -e "Creating .env file...."
+
+echo -e "~~~Set Postgre Config Variable~~~"
+
+read -p 'Postgre User : ' varpguser
+
+read -sp 'Postgre Password : ' varpgpassword
+
+echo
+
+read -p 'Postgre Database : ' varpgdatabase
+
+read -p 'Postgre Host(localhost) : ' varpghost
+varpghost=${varpghost:-localhost}
+
+read -p 'Postgre Port(5432) : ' varpgport
+varpgport=${varpgport:-5432}
 
 cat <<EOF > ./.env
 # Server Configuration
 HOST=
 PORT=
 # Postgre Configuration
-PGUSER=
-PGPASSWORD=
-PGDATABASE=
-PGHOST=
-PGPORT=
+PGUSER=$varpguser
+PGPASSWORD=$varpgpassword
+PGDATABASE=$varpgdatabase
+PGHOST=$varpghost
+PGPORT=$varpgport
 EOF
+
+echo -e "File created."
 
 echo "Installing dependencies..."
 npm install
