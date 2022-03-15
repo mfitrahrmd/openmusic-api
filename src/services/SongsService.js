@@ -12,7 +12,7 @@ class SongsService {
     const id = nanoid(16);
 
     const query = {
-      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING song_id AS songId',
+      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING song_id AS "songId"',
       values: [id, title, year, genre, performer, duration, albumId],
     };
 
@@ -20,7 +20,7 @@ class SongsService {
       throw new NotFoundError(`Album with id ${albumId} was not found`);
     });
 
-    if (!result.rows[0].songid) {
+    if (!result.rows[0].songId) {
       throw new InvariantError('Song failed to add');
     }
 
@@ -29,7 +29,7 @@ class SongsService {
 
   async getSongs() {
     const query = {
-      text: 'SELECT song_id AS id,title,performer FROM songs',
+      text: 'SELECT song_id AS id, title, performer FROM songs',
     };
 
     const result = await this._pool.query(query).catch((error) => {
@@ -41,7 +41,7 @@ class SongsService {
 
   async getSongById(id) {
     const query = {
-      text: 'SELECT song_id AS id, title, year, performer, genre, duration, album_id AS albumId FROM songs WHERE song_id = $1',
+      text: 'SELECT song_id AS "id", title, year, performer, genre, duration, album_id AS "albumId" FROM songs WHERE song_id = $1',
       values: [id],
     };
 
