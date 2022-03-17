@@ -28,8 +28,8 @@ class SongsService {
       values: [id, title, year, genre, performer, duration, albumId],
     };
 
-    const result = await this._pool.query(query).catch(() => {
-      throw new NotFoundError(`Album with id ${albumId} was not found`);
+    const result = await this._pool.query(query).catch((err) => {
+      throw err;
     });
 
     if (!result.rows[0].songId) {
@@ -46,24 +46,14 @@ class SongsService {
    * @param {string} detail.performer - Song performer to be search
    * @returns {object} Object of Array contains songs data.
    */
-  async getSongs({ title, performer }) {
+  async getSongs({ title = '', performer = '' }) {
     const query = {
-      text: 'SELECT song_id AS id, title, performer FROM songs',
+      text: 'SELECT song_id AS id, title, performer FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
+      values: [`%${title}%`, `%${performer}%`],
     };
 
-    if (title && !performer) {
-      query.text += ' WHERE title ILIKE $1';
-      query.values = [`%${title}%`];
-    } else if (!title && performer) {
-      query.text += ' WHERE performer ILIKE $1';
-      query.values = [`%${performer}%`];
-    } else if (title && performer) {
-      query.text += ' WHERE title ILIKE $1 AND performer ILIKE $2';
-      query.values = [`%${title}%`, `%${performer}%`];
-    }
-
-    const result = await this._pool.query(query).catch((error) => {
-      throw error;
+    const result = await this._pool.query(query).catch((err) => {
+      throw err;
     });
 
     return { songs: result.rows };
@@ -80,11 +70,11 @@ class SongsService {
       values: [id],
     };
 
-    const result = await this._pool.query(query).catch((error) => {
-      throw error;
+    const result = await this._pool.query(query).catch((err) => {
+      throw err;
     });
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Song not found');
     }
 
@@ -108,11 +98,11 @@ class SongsService {
       values: [title, year, performer, genre, duration, albumId, id],
     };
 
-    const result = await this._pool.query(query).catch(() => {
-      throw new NotFoundError(`Album with id ${albumId} was not found`);
+    const result = await this._pool.query(query).catch((err) => {
+      throw err;
     });
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Song not found');
     }
   }
@@ -132,7 +122,7 @@ class SongsService {
       throw error;
     });
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Song not found');
     }
   }

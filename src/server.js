@@ -4,6 +4,7 @@ require('dotenv').config();
 // Local Modules
 const albumsPlugin = require('./api/albums');
 const songsPlugin = require('./api/songs');
+const errorHandler = require('./serverExtensions/errorHandler');
 
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 5000;
@@ -21,6 +22,11 @@ const init = async () => {
 
   await server.register(albumsPlugin);
   await server.register(songsPlugin);
+
+  server.ext({
+    type: 'onPreResponse',
+    method: errorHandler,
+  });
 
   try {
     await server.start();

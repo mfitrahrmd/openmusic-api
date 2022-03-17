@@ -61,7 +61,7 @@ class AlbumsService {
         throw new NotFoundError('Album not found');
       });
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Album not found');
     }
 
@@ -86,7 +86,7 @@ class AlbumsService {
       throw error;
     });
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Album not found');
     }
   }
@@ -106,7 +106,7 @@ class AlbumsService {
       throw error;
     });
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Album not found');
     }
   }

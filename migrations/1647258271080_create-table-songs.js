@@ -1,7 +1,3 @@
-/* eslint-disable camelcase */
-
-exports.shorthands = undefined;
-
 exports.up = (pgm) => {
   pgm.createTable(
     'songs',
@@ -15,7 +11,7 @@ exports.up = (pgm) => {
         notNull: true,
       },
       year: {
-        type: 'INTEGER',
+        type: 'SMALLINT',
         notNull: true,
       },
       genre: {
@@ -27,7 +23,7 @@ exports.up = (pgm) => {
         notNull: true,
       },
       duration: {
-        type: 'INTEGER',
+        type: 'SMALLINT',
       },
       album_id: {
         type: 'VARCHAR(16)',
