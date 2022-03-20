@@ -7,6 +7,7 @@ const albumsPlugin = require('./api/albums');
 const songsPlugin = require('./api/songs');
 const usersPlugin = require('./api/users');
 const authenticationsPlugin = require('./api/authentications');
+const playlistsPlugin = require('./api/playlists');
 const errorHandler = require('./serverExtensions/errorHandler');
 
 const HOST = process.env.HOST || 'localhost';
@@ -37,21 +38,19 @@ const init = async () => {
       sub: false,
       maxAgeSec: process.env.JWT_ACCESS_TOKEN_AGE,
     },
-    validate: (artifacts) => {
-      console.log(artifacts);
-      return {
-        isValid: true,
-        credentials: {
-          id: artifacts.decoded.payload.id,
-        },
-      };
-    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: {
+        id: artifacts.decoded.payload.userId,
+      },
+    }),
   });
 
   await server.register(albumsPlugin);
   await server.register(songsPlugin);
   await server.register(usersPlugin);
   await server.register(authenticationsPlugin);
+  await server.register(playlistsPlugin);
 
   server.ext({
     type: 'onPreResponse',

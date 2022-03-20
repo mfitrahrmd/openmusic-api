@@ -37,12 +37,14 @@ class AuthenticationsHandler {
 
     const accessToken = this._tokenManager.generateAccessToken({ id });
 
-    return h.response({
-      status: 'success',
-      data: {
-        accessToken,
-      },
-    });
+    return h
+      .response({
+        status: 'success',
+        data: {
+          accessToken,
+        },
+      })
+      .code(200);
   }
 
   async deleteAuthenticationHandler(request, h) {
@@ -52,10 +54,12 @@ class AuthenticationsHandler {
 
     await this._authenticationsService.deleteRefreshToken(refreshToken);
 
-    return h.response({
-      status: 'success',
-      message: 'Refresh Token deleted',
-    });
+    return h
+      .response({
+        status: 'success',
+        message: 'Refresh Token deleted',
+      })
+      .code(200);
   }
 }
 
