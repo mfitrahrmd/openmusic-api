@@ -89,11 +89,7 @@ class PlaylistsService {
       values: [id, songId],
     };
 
-    const result = await this._pool.query(query).catch((err) => {
-      console.log(err);
-    });
-
-    console.log(result);
+    const result = await this._pool.query(query);
 
     if (!result.rowCount) {
       throw new NotFoundError('Song not found');
