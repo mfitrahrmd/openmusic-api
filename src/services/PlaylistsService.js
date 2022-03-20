@@ -2,12 +2,14 @@ const { nanoid } = require('nanoid');
 const postgrePool = require('../config/PostgrePool');
 const InvariantError = require('../exceptions/InvariantError');
 const NotFoundError = require('../exceptions/NotFoundError');
+const AuthorizationError = require('../exceptions/AuthorizationError');
 const { mapGetSongsFromPlaylistById } = require('../utils/mapDBToModel');
 
 class PlaylistsService {
-  constructor(songsService) {
+  constructor(songsService, collaborationsService) {
     this._pool = postgrePool;
     this._songsService = songsService;
+    this._collaborationsService = collaborationsService;
   }
 
   async addPlaylist({ name, credentialId: owner }) {
@@ -29,7 +31,7 @@ class PlaylistsService {
 
   async getPlaylists(owner) {
     const query = {
-      text: 'SELECT p.id, p.name, u.username FROM users u LEFT JOIN playlists p ON u.id = p.owner WHERE p.owner = $1',
+      text: 'SELECT p.id, p.name, u.username FROM users u LEFT JOIN playlists p ON u.id = p.owner LEFT JOIN collaborations c ON c.playlist_id = p.id WHERE p.owner = $1 OR c.user_id = $1',
       values: [owner],
     };
 
@@ -68,7 +70,7 @@ class PlaylistsService {
 
   async getSongsFromPlaylistById(id) {
     const query = {
-      text: 'SELECT p.id AS "playlistId", p.name, u.username, s.id AS "songId", s.title, s.performer FROM users u LEFT JOIN playlists p ON u.id = p.ownera LEFT JOIN playlists_songs ps ON ps.playlist_id = p.id LEFT JOIN songs s ON ps.song_id = s.id WHERE p.id = $1',
+      text: 'SELECT p.id AS "playlistId", p.name, u.username, s.id AS "songId", s.title, s.performer FROM users u LEFT JOIN playlists p ON u.id = p.owner LEFT JOIN playlists_songs ps ON ps.playlist_id = p.id LEFT JOIN songs s ON ps.song_id = s.id WHERE p.id = $1',
       values: [id],
     };
 
@@ -95,6 +97,40 @@ class PlaylistsService {
 
     if (!result.rowCount) {
       throw new NotFoundError('Song not found');
+    }
+  }
+
+  async verifyPlaylistOwner(id, owner) {
+    const query = {
+      text: 'SELECT * FROM playlists WHERE id = $1',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Playlist not found');
+    }
+
+    const playlist = result.rows[0];
+
+    if (playlist.owner !== owner) {
+      throw new AuthorizationError("You don't have permission to access this resource");
+    }
+  }
+
+  async verifyPlaylistAccess(playlistId, userId) {
+    try {
+      await this.verifyPlaylistOwner(playlistId, userId);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+      try {
+        await this._collaborationsService.verifyCollaborator(playlistId, userId);
+      } catch {
+        throw error;
+      }
     }
   }
 }

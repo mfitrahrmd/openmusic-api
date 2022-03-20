@@ -2,6 +2,7 @@ const { nanoid } = require('nanoid');
 const bcrypt = require('bcrypt');
 const postgrePool = require('../config/PostgrePool');
 const InvariantError = require('../exceptions/InvariantError');
+const NotFoundError = require('../exceptions/NotFoundError');
 const AuthenticationError = require('../exceptions/AuthenticationError');
 
 class UsersService {
@@ -27,6 +28,21 @@ class UsersService {
     }
 
     return result.rows[0].userId;
+  }
+
+  async getUserById(id) {
+    const query = {
+      text: 'SELECT id, username, fullname FROM users WHERE id = $1',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('User not found');
+    }
+
+    return result.rows[0];
   }
 
   async verifyUserCredential({ username, password }) {

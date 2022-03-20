@@ -1,6 +1,7 @@
 const PlaylistsHandler = require('./handler');
 const PlaylistsService = require('../../services/PlaylistsService');
 const SongsService = require('../../services/SongsService');
+const CollaborationsService = require('../../services/CollaborationsService');
 const routes = require('./routes');
 
 const playlistsPlugin = {
@@ -14,7 +15,7 @@ const playlistsPlugin = {
     },
   },
   options: {
-    playlistsService: new PlaylistsService(new SongsService()),
+    playlistsService: new PlaylistsService(new SongsService(), new CollaborationsService()),
   },
 };
 

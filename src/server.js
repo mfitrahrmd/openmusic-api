@@ -8,6 +8,7 @@ const songsPlugin = require('./api/songs');
 const usersPlugin = require('./api/users');
 const authenticationsPlugin = require('./api/authentications');
 const playlistsPlugin = require('./api/playlists');
+const collaborationsPlugin = require('./api/collaborations');
 const errorHandler = require('./serverExtensions/errorHandler');
 
 const HOST = process.env.HOST || 'localhost';
@@ -51,6 +52,7 @@ const init = async () => {
   await server.register(usersPlugin);
   await server.register(authenticationsPlugin);
   await server.register(playlistsPlugin);
+  await server.register(collaborationsPlugin);
 
   server.ext({
     type: 'onPreResponse',
