@@ -4,6 +4,7 @@ require('dotenv').config();
 // Local Modules
 const albumsPlugin = require('./api/albums');
 const songsPlugin = require('./api/songs');
+const usersPlugin = require('./api/users');
 const errorHandler = require('./serverExtensions/errorHandler');
 
 const HOST = process.env.HOST || 'localhost';
@@ -22,6 +23,7 @@ const init = async () => {
 
   await server.register(albumsPlugin);
   await server.register(songsPlugin);
+  await server.register(usersPlugin);
 
   server.ext({
     type: 'onPreResponse',

@@ -7,14 +7,14 @@ const songsPlugin = {
   plugin: {
     name: 'songs',
     version: '1.0.0',
-    register: async (server, { service }) => {
-      const songsHandler = new SongsHandler(service);
+    register: async (server, { songsService }) => {
+      const songsHandler = new SongsHandler(songsService);
 
       server.route(routes(songsHandler));
     },
   },
   options: {
-    service: new SongsService(new AlbumsService()),
+    songsService: new SongsService(new AlbumsService()),
   },
 };
 

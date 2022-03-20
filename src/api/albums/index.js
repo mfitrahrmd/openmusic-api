@@ -6,14 +6,14 @@ const albumsPlugin = {
   plugin: {
     name: 'albums',
     version: '1.0.0',
-    register: async (server, { service }) => {
-      const albumsHandler = new AlbumsHandler(service);
+    register: async (server, { albumsService }) => {
+      const albumsHandler = new AlbumsHandler(albumsService);
 
       server.route(routes(albumsHandler));
     },
   },
   options: {
-    service: new AlbumsService(),
+    albumsService: new AlbumsService(),
   },
 };
 

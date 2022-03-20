@@ -1,6 +1,6 @@
 class AlbumsHandler {
-  constructor(service) {
-    this._service = service;
+  constructor(albumsService) {
+    this._albumsService = albumsService;
 
     this.postAlbumHandler = this.postAlbumHandler.bind(this);
     this.getAlbumSongsByIdHandler = this.getAlbumSongsByIdHandler.bind(this);
@@ -9,7 +9,7 @@ class AlbumsHandler {
   }
 
   async postAlbumHandler(request, h) {
-    const albumId = await this._service.addAlbum(request.payload);
+    const albumId = await this._albumsService.addAlbum(request.payload);
 
     return h
       .response({
@@ -24,7 +24,7 @@ class AlbumsHandler {
   async getAlbumSongsByIdHandler(request, h) {
     const { id } = request.params;
 
-    const album = await this._service.getAlbumSongsById(id);
+    const album = await this._albumsService.getAlbumSongsById(id);
 
     return h
       .response({
@@ -40,7 +40,7 @@ class AlbumsHandler {
     const { id } = request.params;
     const { name, year } = request.payload;
 
-    await this._service.updateAlbumById(id, { name, year });
+    await this._albumsService.updateAlbumById(id, { name, year });
 
     return h
       .response({
@@ -53,7 +53,7 @@ class AlbumsHandler {
   async deleteAlbumByIdHandler(request, h) {
     const { id } = request.params;
 
-    await this._service.deleteAlbumById(id);
+    await this._albumsService.deleteAlbumById(id);
 
     return h
       .response({

@@ -1,6 +1,6 @@
 class SongsHandler {
-  constructor(service) {
-    this._service = service;
+  constructor(songsService) {
+    this._songsService = songsService;
 
     this.postSongHandler = this.postSongHandler.bind(this);
     this.getSongsHandler = this.getSongsHandler.bind(this);
@@ -10,7 +10,7 @@ class SongsHandler {
   }
 
   async postSongHandler(request, h) {
-    const songId = await this._service.addSong(request.payload);
+    const songId = await this._songsService.addSong(request.payload);
 
     return h
       .response({
@@ -24,7 +24,7 @@ class SongsHandler {
 
   async getSongsHandler(request, h) {
     const { title, performer } = request.query;
-    const songs = await this._service.getSongs({ title, performer });
+    const songs = await this._songsService.getSongs({ title, performer });
 
     return h
       .response({
@@ -39,7 +39,7 @@ class SongsHandler {
   async getSongByIdHandler(request, h) {
     const { id } = request.params;
 
-    const song = await this._service.getSongById(id);
+    const song = await this._songsService.getSongById(id);
 
     return h
       .response({
@@ -54,7 +54,7 @@ class SongsHandler {
   async putSongByIdHandler(request, h) {
     const { id } = request.params;
 
-    await this._service.updateSongById(id, request.payload);
+    await this._songsService.updateSongById(id, request.payload);
 
     return h
       .response({
@@ -67,7 +67,7 @@ class SongsHandler {
   async deleteSongByIdHandler(request, h) {
     const { id } = request.params;
 
-    await this._service.deleteSongById(id);
+    await this._songsService.deleteSongById(id);
 
     return h
       .response({
