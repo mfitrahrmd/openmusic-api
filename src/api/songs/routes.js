@@ -1,18 +1,11 @@
-const { postSongPayload, putSongPayload } = require('./validate');
-const validationErrorAction = require('../../exceptions/validationErrorAction');
+const { postSongValidator, putSongValidator } = require('../../validator/songs');
 
 const routes = (handler) => [
   {
     path: '/songs',
     method: 'POST',
     config: {
-      validate: {
-        payload: postSongPayload,
-        options: {
-          abortEarly: false,
-        },
-        failAction: validationErrorAction,
-      },
+      validate: postSongValidator,
     },
     handler: handler.postSongHandler,
   },
@@ -30,13 +23,7 @@ const routes = (handler) => [
     path: '/songs/{id}',
     method: 'PUT',
     config: {
-      validate: {
-        payload: putSongPayload,
-        options: {
-          abortEarly: false,
-        },
-        failAction: validationErrorAction,
-      },
+      validate: putSongValidator,
     },
     handler: handler.putSongByIdHandler,
   },

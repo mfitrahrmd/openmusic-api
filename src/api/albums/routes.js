@@ -1,37 +1,24 @@
-const { postAlbumPayload, putAlbumPayload } = require('./validate');
-const validationErrorAction = require('../../exceptions/validationErrorAction');
+const { postAlbumValidator, putAlbumValidator } = require('../../validator/albums');
 
 const routes = (handler) => [
   {
     path: '/albums',
     method: 'POST',
     config: {
-      validate: {
-        payload: postAlbumPayload,
-        options: {
-          abortEarly: false,
-        },
-        failAction: validationErrorAction,
-      },
+      validate: postAlbumValidator,
     },
     handler: handler.postAlbumHandler,
   },
   {
     path: '/albums/{id}',
     method: 'GET',
-    handler: handler.getAlbumByIdHandler,
+    handler: handler.getAlbumSongsByIdHandler,
   },
   {
     path: '/albums/{id}',
     method: 'PUT',
     config: {
-      validate: {
-        payload: putAlbumPayload,
-        options: {
-          abortEarly: false,
-        },
-        failAction: validationErrorAction,
-      },
+      validate: putAlbumValidator,
     },
     handler: handler.putAlbumByIdHandler,
   },

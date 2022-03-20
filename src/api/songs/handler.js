@@ -10,14 +10,14 @@ class SongsHandler {
   }
 
   async postSongHandler(request, h) {
-    const { title, year, genre, performer, duration, albumId } = request.payload;
-
-    const songId = await this._service.addSong({ title, year, genre, performer, duration, albumId });
+    const songId = await this._service.addSong(request.payload);
 
     return h
       .response({
         status: 'success',
-        data: songId,
+        data: {
+          songId,
+        },
       })
       .code(201);
   }
@@ -29,7 +29,9 @@ class SongsHandler {
     return h
       .response({
         status: 'success',
-        data: songs,
+        data: {
+          songs,
+        },
       })
       .code(200);
   }
@@ -42,16 +44,17 @@ class SongsHandler {
     return h
       .response({
         status: 'success',
-        data: song,
+        data: {
+          song,
+        },
       })
       .code(200);
   }
 
   async putSongByIdHandler(request, h) {
     const { id } = request.params;
-    const { title, year, genre, performer, duration, albumId } = request.payload;
 
-    await this._service.updateSongById(id, { title, year, genre, performer, duration, albumId });
+    await this._service.updateSongById(id, request.payload);
 
     return h
       .response({

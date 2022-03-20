@@ -6,8 +6,9 @@ const NotFoundError = require('../exceptions/NotFoundError');
 const postgrePool = require('../config/PostgrePool');
 
 class SongsService {
-  constructor() {
+  constructor(albumsService) {
     this._pool = postgrePool;
+    this._albumsService = albumsService;
   }
 
   /**
@@ -21,22 +22,24 @@ class SongsService {
    * @returns {object} The id of created song.
    */
   async addSong({ title, year, genre, performer, duration, albumId }) {
-    const id = nanoid(16);
+    if (albumId) {
+      await this._albumsService.getAlbumById(albumId);
+    }
+
+    const id = `song-${nanoid(16)}`;
 
     const query = {
-      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING song_id AS "songId"',
+      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id AS "songId"',
       values: [id, title, year, genre, performer, duration, albumId],
     };
 
-    const result = await this._pool.query(query).catch((err) => {
-      throw err;
-    });
+    const result = await this._pool.query(query);
 
     if (!result.rows[0].songId) {
       throw new InvariantError('Song failed to add');
     }
 
-    return result.rows[0];
+    return result.rows[0].songId;
   }
 
   /**
@@ -48,15 +51,13 @@ class SongsService {
    */
   async getSongs({ title = '', performer = '' }) {
     const query = {
-      text: 'SELECT song_id AS id, title, performer FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
+      text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
       values: [`%${title}%`, `%${performer}%`],
     };
 
-    const result = await this._pool.query(query).catch((err) => {
-      throw err;
-    });
+    const result = await this._pool.query(query);
 
-    return { songs: result.rows };
+    return result.rows;
   }
 
   /**
@@ -66,19 +67,17 @@ class SongsService {
    */
   async getSongById(id) {
     const query = {
-      text: 'SELECT song_id AS "id", title, year, performer, genre, duration, album_id AS "albumId" FROM songs WHERE song_id = $1',
+      text: 'SELECT id, title, year, performer, genre, duration, album_id AS "albumId" FROM songs WHERE id = $1',
       values: [id],
     };
 
-    const result = await this._pool.query(query).catch((err) => {
-      throw err;
-    });
+    const result = await this._pool.query(query);
 
     if (!result.rowCount) {
       throw new NotFoundError('Song not found');
     }
 
-    return { song: result.rows[0] };
+    return result.rows[0];
   }
 
   /**
@@ -94,13 +93,11 @@ class SongsService {
    */
   async updateSongById(id, { title, year, performer, genre, duration, albumId }) {
     const query = {
-      text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5, album_id = $6 WHERE song_id = $7 RETURNING song_id AS songId',
+      text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5, album_id = $6 WHERE id = $7 RETURNING id AS songId',
       values: [title, year, performer, genre, duration, albumId, id],
     };
 
-    const result = await this._pool.query(query).catch((err) => {
-      throw err;
-    });
+    const result = await this._pool.query(query);
 
     if (!result.rowCount) {
       throw new NotFoundError('Song not found');
@@ -114,13 +111,11 @@ class SongsService {
    */
   async deleteSongById(id) {
     const query = {
-      text: 'DELETE FROM songs WHERE song_id = $1 RETURNING song_id AS songId',
+      text: 'DELETE FROM songs WHERE id = $1 RETURNING id AS songId',
       values: [id],
     };
 
-    const result = await this._pool.query(query).catch((error) => {
-      throw error;
-    });
+    const result = await this._pool.query(query);
 
     if (!result.rowCount) {
       throw new NotFoundError('Song not found');
