@@ -3,7 +3,7 @@ const postgrePool = require('../config/PostgrePool');
 const InvariantError = require('../exceptions/InvariantError');
 const NotFoundError = require('../exceptions/NotFoundError');
 const AuthorizationError = require('../exceptions/AuthorizationError');
-const { mapGetSongsFromPlaylistById } = require('../utils/mapDBToModel');
+const { mapGetSongsFromPlaylistById, mapGetPlaylistActivitiesById } = require('../utils/mapDBToModel');
 
 class PlaylistsService {
   constructor(songsService, collaborationsService) {
@@ -40,10 +40,10 @@ class PlaylistsService {
     return result.rows;
   }
 
-  async deletePlaylistById(id) {
+  async deletePlaylistById(playlistId) {
     const query = {
       text: 'DELETE FROM playlists WHERE id = $1 RETURNING id AS "playlistId"',
-      values: [id],
+      values: [playlistId],
     };
 
     const result = await this._pool.query(query);
@@ -68,10 +68,10 @@ class PlaylistsService {
     }
   }
 
-  async getSongsFromPlaylistById(id) {
+  async getSongsFromPlaylistById(playlistId) {
     const query = {
       text: 'SELECT p.id AS "playlistId", p.name, u.username, s.id AS "songId", s.title, s.performer FROM users u LEFT JOIN playlists p ON u.id = p.owner LEFT JOIN playlists_songs ps ON ps.playlist_id = p.id LEFT JOIN songs s ON ps.song_id = s.id WHERE p.id = $1',
-      values: [id],
+      values: [playlistId],
     };
 
     const result = await this._pool.query(query);
@@ -83,10 +83,10 @@ class PlaylistsService {
     return mapGetSongsFromPlaylistById(result.rows);
   }
 
-  async deleteSongFromPlaylistById(id, songId) {
+  async deleteSongFromPlaylistById(playlistId, songId) {
     const query = {
       text: 'DELETE FROM playlists_songs WHERE playlist_id = $1 AND song_id = $2 RETURNING id',
-      values: [id, songId],
+      values: [playlistId, songId],
     };
 
     const result = await this._pool.query(query);
@@ -96,10 +96,10 @@ class PlaylistsService {
     }
   }
 
-  async verifyPlaylistOwner(id, owner) {
+  async verifyPlaylistOwner(playlistId, owner) {
     const query = {
       text: 'SELECT * FROM playlists WHERE id = $1',
-      values: [id],
+      values: [playlistId],
     };
 
     const result = await this._pool.query(query);
@@ -128,6 +128,33 @@ class PlaylistsService {
         throw error;
       }
     }
+  }
+
+  async addPlaylistActivities(playlistId, songId, userId, action) {
+    const id = `activity-${nanoid(16)}`;
+    const DATE_NOW = new Date().toISOString();
+
+    const query = {
+      text: 'INSERT INTO playlist_songs_activities VALUES($1, $2, $3, $4, $5, $6)',
+      values: [id, playlistId, songId, userId, action, DATE_NOW],
+    };
+
+    await this._pool.query(query);
+  }
+
+  async getPlaylistActivitiesById(playlistId) {
+    const query = {
+      text: 'SELECT p.id AS "playlistId", u.username, s.title, psa.action, psa.time FROM playlist_songs_activities psa LEFT JOIN playlists p ON psa.playlist_id = p.id LEFT JOIN users u ON psa.user_id = u.id LEFT JOIN songs s ON psa.song_id = s.id WHERE psa.playlist_id = $1 ORDER BY psa.time ASC',
+      values: [playlistId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Playlist not found');
+    }
+
+    return mapGetPlaylistActivitiesById(result.rows);
   }
 }
 

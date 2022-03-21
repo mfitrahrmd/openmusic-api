@@ -26,4 +26,16 @@ const mapGetSongsFromPlaylistById = (rows) =>
     { id: null, name: null, username: null, songs: [] }
   );
 
-module.exports = { mapGetAlbumSongsById, mapGetSongsFromPlaylistById };
+const mapGetPlaylistActivitiesById = (rows) =>
+  rows.reduce(
+    (acc, curr) => {
+      acc.playlistId = curr.playlistId;
+      if (curr.username) {
+        acc.activities.push({ username: curr.username, title: curr.title, action: curr.action, time: curr.time });
+      }
+      return acc;
+    },
+    { playlistId: null, activities: [] }
+  );
+
+module.exports = { mapGetAlbumSongsById, mapGetSongsFromPlaylistById, mapGetPlaylistActivitiesById };
