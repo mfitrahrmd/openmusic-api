@@ -8,12 +8,7 @@ function validationErrorAction(request, h, error) {
       .code(400)
       .takeover();
   }
-  return h
-    .response({
-      status: 'error',
-      message: "Sorry, we've encountered an unexpected error. Please try again later.",
-    })
-    .code(500);
+  return h.continue;
 }
 
 module.exports = validationErrorAction;

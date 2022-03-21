@@ -16,16 +16,31 @@ varpghost=${varpghost:-localhost}
 read -p 'Postgre Port(5432) : ' varpgport
 varpgport=${varpgport:-5432}
 
+echo -e "~~~Set JWT Key~~~"
+
+read -p 'JWT Access Token key : ' varjwtaccesstoken
+varjwtaccesstoken=${varjwtaccesstoken:-accessToken}
+
+read -p 'JWT Refresh Token key : ' varjwtrefreshtoken
+varjwtrefreshtoken=${varjwtrefreshtoken:-refreshToken}
+
+
 cat <<EOF > ./.env
 # Server Configuration
 HOST=
 PORT=
+
 # Postgre Configuration
 PGUSER=$varpguser
 PGPASSWORD=$varpgpassword
 PGDATABASE=$varpgdatabase
 PGHOST=$varpghost
 PGPORT=$varpgport
+
+# JWT key
+JWT_ACCESS_TOKEN_KEY=$varjwtaccesstoken
+JWT_REFRESH_TOKEN_KEY=$varjwtrefreshtoken
+JWT_ACCESS_TOKEN_AGE=1800
 EOF
 
 echo -e "File created."

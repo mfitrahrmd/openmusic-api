@@ -14,11 +14,6 @@ class SongsService {
   /**
    * Add song data.
    * @param {object} details - Song details.
-   * @param {string} details.title - The title of the song.
-   * @param {number} details.year - Song release year.
-   * @param {string} details.genre - The genre of the song.
-   * @param {string} details.performer - The performer of the song.
-   * @param {string} details.albumId - The album id of the song's album.
    * @returns {object} The id of created song.
    */
   async addSong({ title, year, genre, performer, duration, albumId }) {
@@ -45,8 +40,6 @@ class SongsService {
   /**
    * Get songs data.
    * @param {object} details - Song details
-   * @param {string} detail.title - Song title to be search
-   * @param {string} detail.performer - Song performer to be search
    * @returns {object} Object of Array contains songs data.
    */
   async getSongs({ title = '', performer = '' }) {
@@ -84,11 +77,6 @@ class SongsService {
    * Update song data for given id.
    * @param {string} id - Song id to be update.
    * @param {object} details - Song details.
-   * @param {string} details.title - The title of the song.
-   * @param {number} details.year - Song release year.
-   * @param {string} details.genre - The genre of the song.
-   * @param {string} details.performer - The performer of the song.
-   * @param {string} details.albumId - The album id of the song's album.
    * @returns {void}
    */
   async updateSongById(id, { title, year, performer, genre, duration, albumId }) {

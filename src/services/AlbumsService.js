@@ -1,6 +1,4 @@
-// Third-Part Modules
 const { nanoid } = require('nanoid');
-// Local Modules
 const InvariantError = require('../exceptions/InvariantError');
 const NotFoundError = require('../exceptions/NotFoundError');
 const postgrePool = require('../config/PostgrePool');
@@ -13,10 +11,8 @@ class AlbumsService {
 
   /**
    * Add album data.
-   * @param {object} details - Song details.
-   * @param {string} details.name - The name of the album.
-   * @param {number} details.year - Album release year.
-   * @returns {object} The id of created album.
+   * @param {object} details - Album details.
+   * @returns {string} The id of created album.
    */
   async addAlbum({ name, year }) {
     const id = `album-${nanoid(16)}`;
@@ -79,8 +75,6 @@ class AlbumsService {
    * Update album data for given id.
    * @param {string} id - Song id to be update.
    * @param {object} details - Song details
-   * @param {string} details.name - The name of the album.
-   * @param {number} details.year - Album release year.
    * @returns {void}
    */
   async updateAlbumById(id, { name, year }) {

@@ -2,13 +2,15 @@
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
 require('dotenv').config();
-// Local Modules
+
+// Server Plugin
 const albumsPlugin = require('./api/albums');
 const songsPlugin = require('./api/songs');
 const usersPlugin = require('./api/users');
 const authenticationsPlugin = require('./api/authentications');
 const playlistsPlugin = require('./api/playlists');
 const collaborationsPlugin = require('./api/collaborations');
+
 const errorHandler = require('./serverExtensions/errorHandler');
 
 const HOST = process.env.HOST || 'localhost';

@@ -6,6 +6,11 @@ class AuthenticationsService {
     this._pool = postgrePool;
   }
 
+  /**
+   * Save refresh token into database.
+   * @param {string} token - token to be store.
+   * @returns {void}
+   */
   async addRefreshToken(token) {
     const query = {
       text: 'INSERT INTO authentications VALUES($1)',
@@ -15,6 +20,11 @@ class AuthenticationsService {
     await this._pool.query(query);
   }
 
+  /**
+   * Verify refresh token if its match from database.
+   * @param {string} token - token to be verify.
+   * @returns {void}
+   */
   async verifyRefreshToken(token) {
     const query = {
       text: 'SELECT FROM authentications WHERE token = $1',
@@ -28,6 +38,11 @@ class AuthenticationsService {
     }
   }
 
+  /**
+   * Delete refresh token from database.
+   * @param {string} token - token to be delete.
+   * @returns {void}
+   */
   async deleteRefreshToken(token) {
     const query = {
       text: 'DELETE FROM authentications WHERE token = $1',

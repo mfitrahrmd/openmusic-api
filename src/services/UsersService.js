@@ -10,6 +10,11 @@ class UsersService {
     this._pool = postgrePool;
   }
 
+  /**
+   * Add user.
+   * @param {object} details - User details.
+   * @returns {string} the id of created user
+   */
   async addUser({ username, password, fullname }) {
     await this.#verifyNewUsername(username);
 
@@ -30,6 +35,11 @@ class UsersService {
     return result.rows[0].userId;
   }
 
+  /**
+   * Find user for given id.
+   * @param {string} id - the id of the user to be search.
+   * @returns {object} the details of the user
+   */
   async getUserById(id) {
     const query = {
       text: 'SELECT id, username, fullname FROM users WHERE id = $1',
@@ -45,6 +55,11 @@ class UsersService {
     return result.rows[0];
   }
 
+  /**
+   * Add user.
+   * @param {object} details - User details.
+   * @returns {string} the id of verified user
+   */
   async verifyUserCredential({ username, password }) {
     const query = {
       text: 'SELECT id, password FROM users WHERE username = $1',

@@ -3,18 +3,18 @@ const SongsService = require('../../services/SongsService');
 const AlbumsService = require('../../services/AlbumsService');
 const routes = require('./routes');
 
+const albumsService = new AlbumsService();
+const songsService = new SongsService(albumsService);
+
 const songsPlugin = {
   plugin: {
     name: 'songs',
     version: '1.0.0',
-    register: async (server, { songsService }) => {
+    register: async (server) => {
       const songsHandler = new SongsHandler(songsService);
 
       server.route(routes(songsHandler));
     },
-  },
-  options: {
-    songsService: new SongsService(new AlbumsService()),
   },
 };
 
