@@ -1,6 +1,6 @@
 const Jwt = require('@hapi/jwt');
 const InvariantError = require('../exceptions/InvariantError');
-require('dotenv');
+require('dotenv').config();
 
 const TokenManager = {
   generateAccessToken(payload) {
