@@ -1,17 +1,11 @@
 # openmusic-api
 
-First project of "Belajar Fundamental Aplikasi Back-End" course provide by DTS FGA &amp; Dicoding Indonesia.
-
-## Initialize Project
-
-```
-npm run init
-```
+Second project of "Belajar Fundamental Aplikasi Back-End" course provide by DTS FGA &amp; Dicoding Indonesia.
 
 ### Compiles and hot-reloads for development
 
 ```
-npm run dev
+npm run start-dev
 ```
 
 ### Compiles and start project

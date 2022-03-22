@@ -34,12 +34,12 @@ const init = async () => {
   ]);
 
   server.auth.strategy('openmusicapp_jwt', 'jwt', {
-    keys: process.env.JWT_ACCESS_TOKEN_KEY,
+    keys: process.env.ACCESS_TOKEN_KEY,
     verify: {
       aud: false,
       iss: false,
       sub: false,
-      maxAgeSec: process.env.JWT_ACCESS_TOKEN_AGE,
+      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
     },
     validate: (artifacts) => ({
       isValid: true,
