@@ -1,5 +1,5 @@
 const UsersHandler = require('./handler');
-const UsersService = require('../../services/UsersService');
+const UsersService = require('../../services/postgresql/UsersService');
 const routes = require('./routes');
 
 const usersService = new UsersService();

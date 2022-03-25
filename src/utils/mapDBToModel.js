@@ -1,15 +1,16 @@
-const mapGetAlbumSongsById = (rows) =>
+const mapGetAlbumDetailsById = (rows) =>
   rows.reduce(
     (acc, curr) => {
       acc.id = curr.albumId;
       acc.name = curr.name;
       acc.year = curr.year;
+      acc.coverUrl = curr.coverUrl;
       if (curr.songId) {
         acc.songs.push({ id: curr.songId, title: curr.title, performer: curr.performer });
       }
       return acc;
     },
-    { id: null, name: null, year: null, songs: [] }
+    { id: null, name: null, year: null, coverUrl: null, songs: [] }
   );
 
 const mapGetSongsFromPlaylistById = (rows) =>
@@ -26,6 +27,19 @@ const mapGetSongsFromPlaylistById = (rows) =>
     { id: null, name: null, username: null, songs: [] }
   );
 
+const mapGetPlaylistById = (rows) =>
+  rows.reduce(
+    (acc, curr) => {
+      acc.id = curr.playlistId;
+      acc.name = curr.name;
+      if (curr.songId) {
+        acc.songs.push({ id: curr.songId, title: curr.title, performer: curr.performer });
+      }
+      return acc;
+    },
+    { id: null, name: null, songs: [] }
+  );
+
 const mapGetPlaylistActivitiesById = (rows) =>
   rows.reduce(
     (acc, curr) => {
@@ -38,4 +52,4 @@ const mapGetPlaylistActivitiesById = (rows) =>
     { playlistId: null, activities: [] }
   );
 
-module.exports = { mapGetAlbumSongsById, mapGetSongsFromPlaylistById, mapGetPlaylistActivitiesById };
+module.exports = { mapGetAlbumDetailsById, mapGetSongsFromPlaylistById, mapGetPlaylistActivitiesById, mapGetPlaylistById };

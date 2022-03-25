@@ -1,4 +1,4 @@
-const { postAlbumValidator, putAlbumValidator } = require('../../validator/albums');
+const { postAlbumValidator, putAlbumValidator, postAlbumCoverByIdValidator } = require('../../validator/albums');
 
 const routes = (handler) => [
   {
@@ -10,9 +10,9 @@ const routes = (handler) => [
     handler: handler.postAlbumHandler,
   },
   {
-    path: '/albums/{id}',
+    path: '/albums/{albumId}',
     method: 'GET',
-    handler: handler.getAlbumSongsByIdHandler,
+    handler: handler.getAlbumDetailsByIdHandler,
   },
   {
     path: '/albums/{id}',
@@ -26,6 +26,33 @@ const routes = (handler) => [
     path: '/albums/{id}',
     method: 'DELETE',
     handler: handler.deleteAlbumByIdHandler,
+  },
+  {
+    path: '/albums/{id}/covers',
+    method: 'POST',
+    handler: handler.postAlbumCoverByIdHandler,
+    config: {
+      validate: postAlbumCoverByIdValidator,
+      payload: {
+        allow: 'multipart/form-data',
+        multipart: true,
+        output: 'stream',
+        maxBytes: 512000,
+      },
+    },
+  },
+  {
+    path: '/albums/{id}/likes',
+    method: 'POST',
+    handler: handler.postAlbumLikeByIdHandler,
+    config: {
+      auth: 'openmusicapp_jwt',
+    },
+  },
+  {
+    path: '/albums/{id}/likes',
+    method: 'GET',
+    handler: handler.getAlbumLikesCountByIdHandler,
   },
 ];
 

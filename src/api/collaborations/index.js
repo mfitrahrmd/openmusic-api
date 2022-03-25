@@ -1,8 +1,8 @@
 const routes = require('./routes');
 const CollaborationsHandler = require('./handler');
-const CollaborationsService = require('../../services/CollaborationsService');
-const PlaylistsService = require('../../services/PlaylistsService');
-const UsersService = require('../../services/UsersService');
+const CollaborationsService = require('../../services/postgresql/CollaborationsService');
+const PlaylistsService = require('../../services/postgresql/PlaylistsService');
+const UsersService = require('../../services/postgresql/UsersService');
 
 const usersService = new UsersService();
 const collaborationsService = new CollaborationsService(usersService);

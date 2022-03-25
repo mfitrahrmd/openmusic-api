@@ -5,6 +5,7 @@
   "main": "./src/server.js",
   "scripts": {
     "start-dev": "nodemon ./src/server.js",
+    "start:rabbitmq": "node ./src/services/rabbitmq/consumer/ConsumerService.js",
     "start": "node ./src/server.js",
     "migrate": "node-pg-migrate",
     "lint": "eslint . --ext .js"
@@ -35,15 +36,20 @@
     "eslint-plugin-prettier": "^4.0.0"
   },
   "dependencies": {
+    "@hapi/catbox-redis": "^6.0.2",
     "@hapi/hapi": "^20.2.1",
+    "@hapi/inert": "^6.0.5",
     "@hapi/jwt": "^2.1.0",
+    "amqplib": "^0.8.0",
     "bcrypt": "^5.0.1",
     "dotenv": "^16.0.0",
     "joi": "^17.6.0",
     "lodash": "^4.17.21",
     "nanoid": "^3.3.1",
     "node-pg-migrate": "^6.2.1",
+    "nodemailer": "^6.7.3",
     "nodemon": "^2.0.15",
-    "pg": "^8.7.3"
+    "pg": "^8.7.3",
+    "redis": "^4.0.4"
   }
 }

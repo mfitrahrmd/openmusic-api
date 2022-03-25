@@ -1,6 +1,6 @@
 const SongsHandler = require('./handler');
-const SongsService = require('../../services/SongsService');
-const AlbumsService = require('../../services/AlbumsService');
+const SongsService = require('../../services/postgresql/SongsService');
+const AlbumsService = require('../../services/postgresql/AlbumsService');
 const routes = require('./routes');
 
 const albumsService = new AlbumsService();

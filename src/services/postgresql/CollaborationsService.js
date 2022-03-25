@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid');
-const postgrePool = require('../config/PostgrePool');
-const InvariantError = require('../exceptions/InvariantError');
-const NotFoundError = require('../exceptions/NotFoundError');
+const postgrePool = require('../../config/PostgrePool');
+const InvariantError = require('../../exceptions/InvariantError');
+const NotFoundError = require('../../exceptions/NotFoundError');
 
 class CollaborationsService {
   constructor(usersService) {

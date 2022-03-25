@@ -1,6 +1,10 @@
+// Core Modules
+const path = require('path');
 // Third-Party Modules
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
+const Inert = require('@hapi/inert');
+const CatboxRedis = require('@hapi/catbox-redis');
 require('dotenv').config();
 
 // Server Plugin
@@ -10,6 +14,7 @@ const usersPlugin = require('./api/users');
 const authenticationsPlugin = require('./api/authentications');
 const playlistsPlugin = require('./api/playlists');
 const collaborationsPlugin = require('./api/collaborations');
+const exportsPlugin = require('./api/exports');
 
 const errorHandler = require('./serverExtensions/errorHandler');
 
@@ -25,11 +30,27 @@ const init = async () => {
         origin: ['*'],
       },
     },
+    cache: [
+      {
+        name: 'redis_cache',
+        provider: {
+          constructor: CatboxRedis,
+          options: {
+            host: process.env.REDIS_SERVER || 'localhost',
+            port: process.env.REDIS_PORT || 6379,
+            database: process.env.REDIS_DATABASE || 0,
+          },
+        },
+      },
+    ],
   });
 
   await server.register([
     {
       plugin: Jwt,
+    },
+    {
+      plugin: Inert,
     },
   ]);
 
@@ -39,7 +60,7 @@ const init = async () => {
       aud: false,
       iss: false,
       sub: false,
-      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+      maxAgeSec: process.env.ACCESS_TOKEN_AGE || 1800,
     },
     validate: (artifacts) => ({
       isValid: true,
@@ -49,12 +70,18 @@ const init = async () => {
     }),
   });
 
-  await server.register(albumsPlugin);
-  await server.register(songsPlugin);
-  await server.register(usersPlugin);
-  await server.register(authenticationsPlugin);
-  await server.register(playlistsPlugin);
-  await server.register(collaborationsPlugin);
+  // Route for serving static resources
+  server.route({
+    path: '/static/{param*}',
+    method: 'GET',
+    handler: {
+      directory: {
+        path: path.resolve(__dirname, 'static'),
+      },
+    },
+  });
+
+  await server.register([albumsPlugin, songsPlugin, usersPlugin, authenticationsPlugin, playlistsPlugin, collaborationsPlugin, exportsPlugin]);
 
   server.ext({
     type: 'onPreResponse',

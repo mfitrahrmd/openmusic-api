@@ -1,9 +1,9 @@
 // Third-Party Modules
 const { nanoid } = require('nanoid');
 // Local Modules
-const InvariantError = require('../exceptions/InvariantError');
-const NotFoundError = require('../exceptions/NotFoundError');
-const postgrePool = require('../config/PostgrePool');
+const InvariantError = require('../../exceptions/InvariantError');
+const NotFoundError = require('../../exceptions/NotFoundError');
+const postgrePool = require('../../config/PostgrePool');
 
 class SongsService {
   constructor(albumsService) {

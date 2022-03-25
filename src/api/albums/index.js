@@ -1,15 +1,31 @@
+const path = require('path');
 const AlbumsHandler = require('./handler');
-const AlbumsService = require('../../services/AlbumsService');
+const AlbumsService = require('../../services/postgresql/AlbumsService');
+const StorageService = require('../../services/storage/StorageService');
+
+const { validateImageHeaders } = require('../../validator/uploads/index');
+
 const routes = require('./routes');
 
 const albumsService = new AlbumsService();
+const storageService = new StorageService(path.resolve(process.cwd(), 'src/static/uploads/images'));
 
 const albumsPlugin = {
   plugin: {
     name: 'albums',
     version: '1.0.0',
     register: async (server) => {
-      const albumsHandler = new AlbumsHandler(albumsService);
+      // Whenever this method is called the result will be saved to cache (redis)
+      server.method('cached_getAlbumLikesCount', albumsService.getAlbumLikesCount, {
+        cache: {
+          cache: 'redis_cache',
+          expiresIn: 1000 * 60 * 30, // 30 minute
+          generateTimeout: 3000,
+          getDecoratedValue: true, // Get additional details about the cache state (value, cached, report)
+        },
+      });
+
+      const albumsHandler = new AlbumsHandler(albumsService, storageService, validateImageHeaders);
 
       server.route(routes(albumsHandler));
     },

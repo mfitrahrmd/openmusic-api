@@ -2,3 +2,4 @@
 /.rest
 /.env
 /.prod.env
+/src/static

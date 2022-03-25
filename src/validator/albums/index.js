@@ -1,5 +1,5 @@
 const validationErrorAction = require('../../exceptions/validationErrorAction');
-const { PostAlbumPayloadSchema, PutAlbumPayloadSchema } = require('./schema');
+const { PostAlbumPayloadSchema, PutAlbumPayloadSchema, PostAlbumCoverByIdPayloadSchema } = require('./schema');
 
 const postAlbumValidator = {
   payload: PostAlbumPayloadSchema,
@@ -17,4 +17,12 @@ const putAlbumValidator = {
   failAction: validationErrorAction,
 };
 
-module.exports = { postAlbumValidator, putAlbumValidator };
+const postAlbumCoverByIdValidator = {
+  payload: PostAlbumCoverByIdPayloadSchema,
+  options: {
+    abortEarly: false,
+  },
+  failAction: validationErrorAction,
+};
+
+module.exports = { postAlbumValidator, putAlbumValidator, postAlbumCoverByIdValidator };

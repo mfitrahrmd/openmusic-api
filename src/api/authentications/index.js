@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 const routes = require('./routes');
 const AuthenticationsHandler = require('./handler');
-const AuthenticationsService = require('../../services/AuthenticationsService');
-const UsersService = require('../../services/UsersService');
+const AuthenticationsService = require('../../services/postgresql/AuthenticationsService');
+const UsersService = require('../../services/postgresql/UsersService');
 const TokenManager = require('../../tokenize/TokenManager');
 
 const authenticationsService = new AuthenticationsService();

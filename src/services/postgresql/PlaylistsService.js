@@ -1,9 +1,9 @@
 const { nanoid } = require('nanoid');
-const postgrePool = require('../config/PostgrePool');
-const InvariantError = require('../exceptions/InvariantError');
-const NotFoundError = require('../exceptions/NotFoundError');
-const AuthorizationError = require('../exceptions/AuthorizationError');
-const { mapGetSongsFromPlaylistById, mapGetPlaylistActivitiesById } = require('../utils/mapDBToModel');
+const postgrePool = require('../../config/PostgrePool');
+const InvariantError = require('../../exceptions/InvariantError');
+const NotFoundError = require('../../exceptions/NotFoundError');
+const AuthorizationError = require('../../exceptions/AuthorizationError');
+const { mapGetSongsFromPlaylistById, mapGetPlaylistActivitiesById, mapGetPlaylistById } = require('../../utils/mapDBToModel');
 
 class PlaylistsService {
   constructor(songsService, collaborationsService) {
@@ -38,6 +38,21 @@ class PlaylistsService {
     const result = await this._pool.query(query);
 
     return result.rows;
+  }
+
+  async getPlaylistById(playlistId) {
+    const query = {
+      text: 'SELECT p.id AS "playlistId", p.name, s.id AS "songId", s.title, s.performer FROM playlists p LEFT JOIN playlists_songs ps ON ps.playlist_id = p.id LEFT JOIN songs s ON ps.song_id = s.id WHERE p.id = $1',
+      values: [playlistId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Playlist not found');
+    }
+
+    return mapGetPlaylistById(result.rows);
   }
 
   async deletePlaylistById(playlistId) {

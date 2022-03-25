@@ -10,4 +10,8 @@ const PutAlbumPayloadSchema = Joi.object().keys({
   year: Joi.number().required(),
 });
 
-module.exports = { PostAlbumPayloadSchema, PutAlbumPayloadSchema };
+const PostAlbumCoverByIdPayloadSchema = Joi.object().keys({
+  cover: Joi.required(),
+});
+
+module.exports = { PostAlbumPayloadSchema, PutAlbumPayloadSchema, PostAlbumCoverByIdPayloadSchema };
