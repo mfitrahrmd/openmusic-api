@@ -76,7 +76,7 @@ const init = async () => {
     method: 'GET',
     handler: {
       directory: {
-        path: path.resolve(__dirname, 'static'),
+        path: path.resolve(process.cwd(), 'src/static'),
       },
     },
   });

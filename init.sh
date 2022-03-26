@@ -24,6 +24,34 @@ varjwtaccesstoken=${varjwtaccesstoken:-accessToken}
 read -p 'JWT Refresh Token key : ' varjwtrefreshtoken
 varjwtrefreshtoken=${varjwtrefreshtoken:-refreshToken}
 
+echo -e "~~~Set RabbitMQ config~~~"
+
+read -p 'RabbitMQ Server(amqp://localhost) : ' varrabbitmqserver
+varrabbitmqserver=${varrabbitmqserver:-amqp://localhost}
+
+echo -e "~~~Set Redis config~~~"
+
+read -p 'Redis Server(localhost) : ' varredisserver
+varredisserver=${varredisserver:-localhost}
+
+read -p 'Redis Port(6379) : ' varredisport
+varredisport=${varredisport:-6379}
+
+read -p 'Redis Database(0) : ' varredisdatabase
+varredisdatabase=${varredisdatabase:-0}
+
+echo -e "~~~Set Mail Config~~~"
+
+read -p 'Mail Host : ' varmailhost
+
+read -p 'Mail Port : ' varmailport
+
+read -p 'Mail Address : ' varmailaddress
+
+read -sp 'Mail Password : ' varmailpassword
+
+echo
+
 
 cat <<EOF > ./.env
 # Server Configuration
@@ -41,6 +69,20 @@ PGPORT=$varpgport
 JWT_ACCESS_TOKEN_KEY=$varjwtaccesstoken
 JWT_REFRESH_TOKEN_KEY=$varjwtrefreshtoken
 JWT_ACCESS_TOKEN_AGE=1800
+
+# RabbitMQ configuration
+RABBITMQ_SERVER=$varrabbitmqserver
+
+# Redis configuration
+REDIS_SERVER=$varredisserver
+REDIS_PORT=$varredisport
+REDIS_DATABASE=$varredisdatabase
+
+# Mail configuration
+MAIL_HOST=$varmailhost
+MAIL_PORT=$varmailport
+MAIL_ADDRESS=$varmailaddress
+MAIL_PASSWORD=$varmailpassword
 EOF
 
 echo -e "File created."

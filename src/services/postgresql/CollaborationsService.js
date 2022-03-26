@@ -1,5 +1,5 @@
 const { nanoid } = require('nanoid');
-const postgrePool = require('../../config/PostgrePool');
+const postgrePool = require('./PostgrePool');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 

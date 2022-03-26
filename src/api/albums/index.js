@@ -7,8 +7,10 @@ const { validateImageHeaders } = require('../../validator/uploads/index');
 
 const routes = require('./routes');
 
+const FOLDER_LOCATION = path.resolve(process.cwd(), 'src/static/uploads/images');
+
 const albumsService = new AlbumsService();
-const storageService = new StorageService(path.resolve(process.cwd(), 'src/static/uploads/images'));
+const storageService = new StorageService(FOLDER_LOCATION);
 
 const albumsPlugin = {
   plugin: {

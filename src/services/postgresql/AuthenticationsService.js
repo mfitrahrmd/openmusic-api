@@ -1,4 +1,4 @@
-const postgrePool = require('../../config/PostgrePool');
+const postgrePool = require('./PostgrePool');
 const InvariantError = require('../../exceptions/InvariantError');
 
 class AuthenticationsService {

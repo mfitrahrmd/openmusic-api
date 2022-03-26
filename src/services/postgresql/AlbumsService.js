@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
-const postgrePool = require('../../config/PostgrePool');
+const postgrePool = require('./PostgrePool');
 const { mapGetAlbumDetailsById } = require('../../utils/mapDBToModel');
 
 class AlbumsService {
