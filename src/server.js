@@ -91,7 +91,7 @@ const init = async () => {
 
   try {
     await server.start();
-    console.log(`Server running on http://${HOST}:${PORT}/`);
+    console.log(`Server running on http://${process.env.HOST}:${process.env.PORT}/`);
   } catch (error) {
     console.log(error);
     process.exit(1);
