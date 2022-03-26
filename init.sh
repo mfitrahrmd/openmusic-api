@@ -40,19 +40,6 @@ varredisport=${varredisport:-6379}
 read -p 'Redis Database(0) : ' varredisdatabase
 varredisdatabase=${varredisdatabase:-0}
 
-echo -e "~~~Set Mail Config~~~"
-
-read -p 'Mail Host : ' varmailhost
-
-read -p 'Mail Port : ' varmailport
-
-read -p 'Mail Address : ' varmailaddress
-
-read -sp 'Mail Password : ' varmailpassword
-
-echo
-
-
 cat <<EOF > ./.env
 # Server Configuration
 HOST=
@@ -78,11 +65,6 @@ REDIS_SERVER=$varredisserver
 REDIS_PORT=$varredisport
 REDIS_DATABASE=$varredisdatabase
 
-# Mail configuration
-MAIL_HOST=$varmailhost
-MAIL_PORT=$varmailport
-MAIL_ADDRESS=$varmailaddress
-MAIL_PASSWORD=$varmailpassword
 EOF
 
 echo -e "File created."
