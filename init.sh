@@ -66,9 +66,9 @@ PGHOST=$varpghost
 PGPORT=$varpgport
 
 # JWT key
-JWT_ACCESS_TOKEN_KEY=$varjwtaccesstoken
-JWT_REFRESH_TOKEN_KEY=$varjwtrefreshtoken
-JWT_ACCESS_TOKEN_AGE=1800
+ACCESS_TOKEN_KEY=$varjwtaccesstoken
+REFRESH_TOKEN_KEY=$varjwtrefreshtoken
+ACCESS_TOKEN_AGE=1800
 
 # RabbitMQ configuration
 RABBITMQ_SERVER=$varrabbitmqserver
