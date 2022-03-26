@@ -42,8 +42,8 @@ varredisdatabase=${varredisdatabase:-0}
 
 cat <<EOF > ./.env
 # Server Configuration
-HOST=
-PORT=
+HOST=localhost
+PORT=5000
 
 # Postgre Configuration
 PGUSER=$varpguser

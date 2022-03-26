@@ -18,13 +18,14 @@ const exportsPlugin = require('./api/exports');
 
 const errorHandler = require('./serverExtensions/errorHandler');
 
-const HOST = process.env.HOST || 'localhost';
-const PORT = process.env.PORT || 5000;
+if (!process.env.HOST || !process.env.PORT) {
+  throw new Error('Enivorment host & port is required');
+}
 
 const init = async () => {
   const server = Hapi.server({
-    host: HOST,
-    port: PORT,
+    host: process.env.HOST,
+    port: process.env.PORT,
     routes: {
       cors: {
         origin: ['*'],
